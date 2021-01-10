@@ -39,15 +39,18 @@ namespace InjectionModLoaderFW
                     var types = assem.GetTypes();
                     foreach (var type in types)
                     {
-                        try
+                        if (type.IsAssignableFrom(typeof(MonoBehaviour)))
                         {
-                            GameObject go = new GameObject(file.FullName);
-                            var component = go.AddComponent(type);                            
-                        }
-                        catch(Exception e)
-                        {
-                            // If a mod has an exception when loading, catch it so we don't break the loader.
-                            Debug.LogErrorFormat(format, $"Failed to load {file.FullName}: " + Environment.NewLine + e);
+                            try
+                            {
+                                GameObject go = new GameObject(file.Name);
+                                var component = go.AddComponent(type);
+                            }
+                            catch (Exception e)
+                            {
+                                // If a mod has an exception when loading, catch it so we don't break the loader.
+                                Debug.LogErrorFormat(format, $"Failed to load {file.FullName}: " + Environment.NewLine + e);
+                            }
                         }
                     }
                 }
